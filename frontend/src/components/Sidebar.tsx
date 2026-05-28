@@ -1,7 +1,6 @@
-import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
-  LayoutDashboard, Upload, ClipboardList, FileText, Briefcase, LogOut, Leaf
+  LayoutDashboard, Upload, ClipboardList, Briefcase, LogOut, Leaf
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 

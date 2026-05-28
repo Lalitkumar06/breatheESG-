@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Check, X, Flag, ChevronDown, ChevronUp, RefreshCw } from 'lucide-react';
+import { Check, X, Flag, RefreshCw } from 'lucide-react';
 import { recordsAPI } from '../api/client';
 import StatusBadge from '../components/StatusBadge';
 

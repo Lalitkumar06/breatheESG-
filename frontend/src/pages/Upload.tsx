@@ -1,5 +1,5 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Upload as UploadIcon, FileText, CheckCircle, XCircle, AlertTriangle, RefreshCw } from 'lucide-react';
+import { useState, useRef, useCallback, useEffect } from 'react';
+import { Upload as UploadIcon, CheckCircle, XCircle, AlertTriangle, RefreshCw } from 'lucide-react';
 import { jobsAPI } from '../api/client';
 import StatusBadge from '../components/StatusBadge';
 
