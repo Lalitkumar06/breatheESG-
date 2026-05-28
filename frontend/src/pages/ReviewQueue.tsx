@@ -21,7 +21,7 @@ export default function ReviewQueue() {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [filters, setFilters] = useState({ scope: '', source_type: '', status: '', category: '', date_from: '', date_to: '' });
-  const [actionModal, setActionModal] = useState<{ id: string; type: 'reject' | 'flag' } | null>(null);
+  const [actionModal, setActionModal] = useState<{ id: string; type: 'reject' | 'flag' | 'remove' } | null>(null);
   const [actionReason, setActionReason] = useState('');
   const [acting, setActing] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
@@ -64,9 +64,13 @@ export default function ReviewQueue() {
   const doAction = async () => {
     if (!actionModal) return;
     setActing(actionModal.id);
-    const finalReason = actionReason.trim() || (actionModal.type === 'reject' ? 'Rejected by analyst' : 'Flagged by analyst');
-    if (actionModal.type === 'reject') await recordsAPI.reject(actionModal.id, finalReason).catch(console.error);
-    if (actionModal.type === 'flag') await recordsAPI.flag(actionModal.id, finalReason).catch(console.error);
+    if (actionModal.type === 'remove') {
+      await recordsAPI.delete(actionModal.id).catch(console.error);
+    } else {
+      const finalReason = actionReason.trim() || (actionModal.type === 'reject' ? 'Rejected by analyst' : 'Flagged by analyst');
+      if (actionModal.type === 'reject') await recordsAPI.reject(actionModal.id, finalReason).catch(console.error);
+      if (actionModal.type === 'flag') await recordsAPI.flag(actionModal.id, finalReason).catch(console.error);
+    }
     setActionModal(null);
     setActionReason('');
     setActing(null);
@@ -173,8 +177,8 @@ export default function ReviewQueue() {
                           </button>
                         )}
                         {r.status !== 'REJECTED' && !r.is_locked && (
-                          <button className="btn btn-danger btn-sm" title="Reject"
-                            onClick={() => { setActionModal({ id: r.id, type: 'reject' }); setActionReason(''); }}>
+                          <button className="btn btn-danger btn-sm" title="Remove"
+                            onClick={() => { setActionModal({ id: r.id, type: 'remove' }); setActionReason(''); }}>
                             <X size={11} />
                           </button>
                         )}
@@ -202,17 +206,23 @@ export default function ReviewQueue() {
         }}>
           <div className="glass-card" style={{ padding: 24, width: 400 }}>
             <h3 style={{ marginBottom: 12, textTransform: 'capitalize' }}>
-              {actionModal.type} Record
+              {actionModal.type === 'remove' ? 'Remove Record' : `${actionModal.type} Record`}
             </h3>
-            <textarea
-              value={actionReason}
-              onChange={e => setActionReason(e.target.value)}
-              placeholder={`Reason for ${actionModal.type}...`}
-              rows={3}
-              style={{ marginBottom: 14 }}
-            />
+            {actionModal.type === 'remove' ? (
+              <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 14 }}>
+                Are you sure you want to permanently delete this ESG emission record? This action cannot be undone.
+              </p>
+            ) : (
+              <textarea
+                value={actionReason}
+                onChange={e => setActionReason(e.target.value)}
+                placeholder={`Reason for ${actionModal.type}...`}
+                rows={3}
+                style={{ marginBottom: 14 }}
+              />
+            )}
             <div style={{ display: 'flex', gap: 8 }}>
-              <button className={`btn ${actionModal.type === 'reject' ? 'btn-danger' : 'btn-warning'}`}
+              <button className={`btn ${actionModal.type === 'remove' || actionModal.type === 'reject' ? 'btn-danger' : 'btn-warning'}`}
                 style={{ flex: 1 }} onClick={doAction}>
                 Confirm {actionModal.type}
               </button>

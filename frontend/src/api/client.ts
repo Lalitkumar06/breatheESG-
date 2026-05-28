@@ -71,6 +71,8 @@ export const recordsAPI = {
     api.post(`/records/${id}/reject/`, { reason }),
   flag: (id: string, reason: string) =>
     api.post(`/records/${id}/flag/`, { reason }),
+  delete: (id: string) =>
+    api.delete(`/records/${id}/`),
   bulkApprove: (ids: string[]) =>
     api.post('/records/bulk-approve/', { ids }),
   history: (id: string) => api.get(`/records/${id}/history/`),

@@ -59,7 +59,7 @@ export default function RecordDetail() {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState<any>({});
-  const [modal, setModal] = useState<{ type: 'reject' | 'flag' } | null>(null);
+  const [modal, setModal] = useState<{ type: 'reject' | 'flag' | 'remove' } | null>(null);
   const [reason, setReason] = useState('');
   const [saving, setSaving] = useState(false);
 
@@ -86,6 +86,13 @@ export default function RecordDetail() {
 
   const doAction = async () => {
     setSaving(true);
+    if (modal?.type === 'remove') {
+      await recordsAPI.delete(id!).catch(console.error);
+      setSaving(false);
+      setModal(null);
+      navigate('/review');
+      return;
+    }
     const finalReason = reason.trim() || (modal?.type === 'reject' ? 'Rejected by analyst' : 'Flagged by analyst');
     if (modal?.type === 'reject') await recordsAPI.reject(id!, finalReason).catch(console.error);
     if (modal?.type === 'flag') await recordsAPI.flag(id!, finalReason).catch(console.error);
@@ -207,8 +214,8 @@ export default function RecordDetail() {
                   </button>
                 )}
                 {record.status !== 'REJECTED' && (
-                  <button className="btn btn-danger" style={{ justifyContent: 'center' }} onClick={() => { setModal({ type: 'reject' }); setReason(''); }}>
-                    <X size={14} /> Reject Record
+                  <button className="btn btn-danger" style={{ justifyContent: 'center' }} onClick={() => { setModal({ type: 'remove' }); setReason(''); }}>
+                    <X size={14} /> Remove Record
                   </button>
                 )}
                 {record.status !== 'FLAGGED' && (
@@ -246,11 +253,17 @@ export default function RecordDetail() {
       {modal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
           <div className="glass-card" style={{ padding: 24, width: 400 }}>
-            <h3 style={{ marginBottom: 12, textTransform: 'capitalize' }}>{modal.type} Record</h3>
-            <textarea value={reason} onChange={e => setReason(e.target.value)}
-              placeholder={`Reason for ${modal.type}...`} rows={3} style={{ marginBottom: 14 }} />
+            <h3 style={{ marginBottom: 12, textTransform: 'capitalize' }}>{modal.type === 'remove' ? 'Remove Record' : `${modal.type} Record`}</h3>
+            {modal.type === 'remove' ? (
+              <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 14 }}>
+                Are you sure you want to permanently delete this ESG emission record? This action cannot be undone.
+              </p>
+            ) : (
+              <textarea value={reason} onChange={e => setReason(e.target.value)}
+                placeholder={`Reason for ${modal.type}...`} rows={3} style={{ marginBottom: 14 }} />
+            )}
             <div style={{ display: 'flex', gap: 8 }}>
-              <button className={`btn ${modal.type === 'reject' ? 'btn-danger' : 'btn-warning'}`} style={{ flex: 1 }}
+              <button className={`btn ${modal.type === 'remove' || modal.type === 'reject' ? 'btn-danger' : 'btn-warning'}`} style={{ flex: 1 }}
                 onClick={doAction} disabled={saving}>
                 Confirm {modal.type}
               </button>

@@ -58,8 +58,8 @@ class EmissionRecordListView(generics.ListAPIView):
         return qs.select_related('tenant', 'ingestion_job', 'reviewed_by')
 
 
-class EmissionRecordDetailView(generics.RetrieveUpdateAPIView):
-    """GET + PATCH /api/records/{id}/"""
+class EmissionRecordDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """GET + PATCH + DELETE /api/records/{id}/"""
     permission_classes = [IsAuthenticated]
     serializer_class = EmissionRecordSerializer
 
@@ -69,6 +69,16 @@ class EmissionRecordDetailView(generics.RetrieveUpdateAPIView):
             return EmissionRecord.objects.all()
         tenant = get_tenant(self.request)
         return EmissionRecord.objects.filter(tenant=tenant)
+
+    def perform_destroy(self, instance):
+        log_action(
+            self.request.user,
+            instance.tenant,
+            instance,
+            'REMOVED',
+            before=EmissionRecordSerializer(instance).data,
+        )
+        instance.delete()
 
     def perform_update(self, serializer):
         record = self.get_object()
