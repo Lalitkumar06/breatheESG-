@@ -3,10 +3,10 @@ Breathe ESG Platform — Django Settings
 """
 import os
 from pathlib import Path
+import dj_database_url
 from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-FRONTEND_BUILD_DIR = BASE_DIR / 'frontend_build'
 
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-breathe-esg-dev-key-change-in-production')
 DEBUG = config('DEBUG', default=True, cast=bool)
@@ -48,7 +48,7 @@ ROOT_URLCONF = 'breathe.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates', FRONTEND_BUILD_DIR],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -63,13 +63,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'breathe.wsgi.application'
 
-# Database — SQLite (no external DB required)
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# Database — uses DATABASE_URL env var in production (Neon/PostgreSQL),
+# falls back to SQLite for local development
+_db_url = config('DATABASE_URL', default='')
+if _db_url:
+    DATABASES = {'default': dj_database_url.parse(_db_url, conn_max_age=600)}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
 
 # Auth
 AUTH_PASSWORD_VALIDATORS = [
@@ -83,12 +88,8 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static & Media files
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [
-    FRONTEND_BUILD_DIR / 'assets',
-]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
