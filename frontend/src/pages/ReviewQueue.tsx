@@ -64,8 +64,9 @@ export default function ReviewQueue() {
   const doAction = async () => {
     if (!actionModal) return;
     setActing(actionModal.id);
-    if (actionModal.type === 'reject') await recordsAPI.reject(actionModal.id, actionReason).catch(console.error);
-    if (actionModal.type === 'flag') await recordsAPI.flag(actionModal.id, actionReason).catch(console.error);
+    const finalReason = actionReason.trim() || (actionModal.type === 'reject' ? 'Rejected by analyst' : 'Flagged by analyst');
+    if (actionModal.type === 'reject') await recordsAPI.reject(actionModal.id, finalReason).catch(console.error);
+    if (actionModal.type === 'flag') await recordsAPI.flag(actionModal.id, finalReason).catch(console.error);
     setActionModal(null);
     setActionReason('');
     setActing(null);
@@ -212,7 +213,7 @@ export default function ReviewQueue() {
             />
             <div style={{ display: 'flex', gap: 8 }}>
               <button className={`btn ${actionModal.type === 'reject' ? 'btn-danger' : 'btn-warning'}`}
-                style={{ flex: 1 }} onClick={doAction} disabled={!actionReason.trim()}>
+                style={{ flex: 1 }} onClick={doAction}>
                 Confirm {actionModal.type}
               </button>
               <button className="btn btn-ghost" onClick={() => setActionModal(null)}>Cancel</button>

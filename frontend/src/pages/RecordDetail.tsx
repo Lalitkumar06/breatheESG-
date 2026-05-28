@@ -86,8 +86,9 @@ export default function RecordDetail() {
 
   const doAction = async () => {
     setSaving(true);
-    if (modal?.type === 'reject') await recordsAPI.reject(id!, reason).catch(console.error);
-    if (modal?.type === 'flag') await recordsAPI.flag(id!, reason).catch(console.error);
+    const finalReason = reason.trim() || (modal?.type === 'reject' ? 'Rejected by analyst' : 'Flagged by analyst');
+    if (modal?.type === 'reject') await recordsAPI.reject(id!, finalReason).catch(console.error);
+    if (modal?.type === 'flag') await recordsAPI.flag(id!, finalReason).catch(console.error);
     setSaving(false);
     setModal(null);
     setReason('');
@@ -250,7 +251,7 @@ export default function RecordDetail() {
               placeholder={`Reason for ${modal.type}...`} rows={3} style={{ marginBottom: 14 }} />
             <div style={{ display: 'flex', gap: 8 }}>
               <button className={`btn ${modal.type === 'reject' ? 'btn-danger' : 'btn-warning'}`} style={{ flex: 1 }}
-                onClick={doAction} disabled={!reason.trim() || saving}>
+                onClick={doAction} disabled={saving}>
                 Confirm {modal.type}
               </button>
               <button className="btn btn-ghost" onClick={() => setModal(null)}>Cancel</button>
