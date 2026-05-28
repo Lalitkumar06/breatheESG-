@@ -1,0 +1,26 @@
+transaction_id,employee_id,travel_date,category,origin,destination,distance_km,distance_unit,spend_usd,vendor,trip_purpose,nights,seat_class,vehicle_type
+TXN-2024-001,EMP-1042,2024-01-10,AIR,DEL,BOM,1148,km,285,IndiGo,Client Meeting,,economy,
+TXN-2024-002,EMP-1017,2024-01-12,HOTEL,,,,,180,Marriott Mumbai,Client Meeting,2,,
+TXN-2024-003,EMP-1017,2024-01-12,CAR,,,50,km,35,Ola Corporate,,,,car_medium
+TXN-2024-004,EMP-1089,2024-01-15,AIR,BOM,BLR,,km,195,Air India,Sales Conference,,economy,
+TXN-2024-005,EMP-1089,2024-01-15,HOTEL,,,,,210,ITC Gardenia Bangalore,Sales Conference,3,,
+TXN-2024-006,EMP-1023,2024-01-18,RAIL,DEL,JAI,258,km,45,IRCTC,,,,
+TXN-2024-007,EMP-1056,2024-01-22,AIR,DEL,LHR,6740,km,1850,British Airways,Board Meeting,,business,
+TXN-2024-008,EMP-1056,2024-01-23,HOTEL,,,,,350,Marriott London,Board Meeting,4,,
+TXN-2024-009,EMP-1031,2024-02-05,CAR,,,120,km,90,Zoom Car,,Training,,,car_large
+TXN-2024-010,EMP-1042,2024-02-08,AIR,BOM,HYD,620,km,180,IndiGo,Vendor Review,,economy,
+TXN-2024-011,EMP-1042,2024-02-08,HOTEL,,,,,140,Taj Hyderabad,Vendor Review,1,,
+TXN-2024-012,EMP-1067,2024-02-14,AIR,DEL,DXB,2190,km,420,Emirates,Partner Summit,,economy,
+TXN-2024-013,EMP-1067,2024-02-15,HOTEL,,,,,280,Sheraton Dubai,Partner Summit,2,,
+TXN-2024-014,EMP-1098,2024-02-20,RAIL,BOM,PNQ,,km,25,IRCTC,,Team Offsite,,,
+TXN-2024-015,EMP-1023,2024-03-01,AIR,BLR,MAA,845,km,155,SpiceJet,Audit,,economy,
+TXN-2024-016,EMP-1031,2024-03-05,CAR,,,85,miles,70,Hertz,,Conference,,,rental_car
+TXN-2024-017,EMP-1089,2024-03-10,AIR,DEL,CCU,1305,km,225,Vistara,,economy,
+TXN-2024-018,EMP-1017,2024-03-12,HOTEL,,,,,320,Oberoi Kolkata,,3,,
+TXN-2024-019,EMP-1056,2024-03-18,AIR,LHR,CDG,340,km,310,Air France,EU Meeting,,economy,
+TXN-2024-020,EMP-1056,2024-03-18,HOTEL,,,,,390,Le Meridien Paris,EU Meeting,2,,
+TXN-2024-021,EMP-1042,2024-04-02,AIR,DEL,GOI,,km,195,GoAir,,economy,
+TXN-2024-022,EMP-1098,2024-04-08,CAR,,,200,km,150,Zoomcar,,Sales Trip,,,car_average
+TXN-2024-023,EMP-1067,2024-04-15,AIR,BOM,SIN,4148,km,620,Singapore Airlines,APAC Summit,,economy,
+TXN-2024-024,EMP-1023,2024-04-20,HOTEL,,,,,260,Hilton Singapore,APAC Summit,3,,
+TXN-2024-025,EMP-1031,2024-04-25,RAIL,DEL,AMD,900,km,55,IRCTC,,Supplier Audit,,,
